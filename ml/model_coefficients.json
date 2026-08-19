@@ -1,0 +1,18 @@
+{
+  "model": "Ridge Regression",
+  "version": "v2",
+  "intercept": -0.2144,
+  "previous_semester_average": 0.1501,
+  "previous_failed_courses": -2.3203,
+  "attendance_rate": 0.129,
+  "avg_test_score": 0.2383,
+  "study_habits_score": 0.1117,
+  "assignment_average": 0.0212,
+  "assignment_completion_rate": 0.1756,
+  "assignment_late_rate": -0.0503,
+  "performance_change": 0.5239,
+  "engagement_score": 1.915,
+  "lms_activity_score": 2.7689,
+  "course_load": -0.1535,
+  "weeks_remaining": -0.121
+}

@@ -1,0 +1,95 @@
+Student Result Prediction System — Model Evaluation Report (v2)
+======================================================================
+
+Dataset: dataset.csv (400 records, 13 features)
+Train / test split: 320 / 80 records (80/20, random_state=42)
+
+Models compared: Linear Regression, Ridge Regression, Random Forest, Gradient Boosting
+
+----------------------------------------------------------------------
+Linear Regression
+----------------------------------------------------------------------
+  Regression:  R^2 = 0.8694   MAE = 4.37   RMSE = 5.59
+  Risk-band accuracy: 86.2%
+  At Risk        — precision 0.93  recall 0.67  f1 0.78  (support 21)
+  Needs Support  — precision 0.81  recall 0.95  f1 0.87  (support 40)
+  On Track       — precision 0.94  recall 0.89  f1 0.92  (support 19)
+  Confusion matrix (rows = actual, columns = predicted):
+                       Pred At RiskPred Needs Support   Pred On Track
+   Actual At Risk              14               7               0
+Actual Needs Support               1              38               1
+  Actual On Track               0               2              17
+
+----------------------------------------------------------------------
+Ridge Regression
+----------------------------------------------------------------------
+  Regression:  R^2 = 0.8685   MAE = 4.37   RMSE = 5.61
+  Risk-band accuracy: 87.5%
+  At Risk        — precision 0.94  recall 0.71  f1 0.81  (support 21)
+  Needs Support  — precision 0.83  recall 0.95  f1 0.88  (support 40)
+  On Track       — precision 0.94  recall 0.89  f1 0.92  (support 19)
+  Confusion matrix (rows = actual, columns = predicted):
+                       Pred At RiskPred Needs Support   Pred On Track
+   Actual At Risk              15               6               0
+Actual Needs Support               1              38               1
+  Actual On Track               0               2              17
+
+----------------------------------------------------------------------
+Random Forest
+----------------------------------------------------------------------
+  Regression:  R^2 = 0.7024   MAE = 6.23   RMSE = 8.44
+  Risk-band accuracy: 77.5%
+  At Risk        — precision 0.86  recall 0.57  f1 0.69  (support 21)
+  Needs Support  — precision 0.71  recall 0.93  f1 0.80  (support 40)
+  On Track       — precision 0.93  recall 0.68  f1 0.79  (support 19)
+  Confusion matrix (rows = actual, columns = predicted):
+                       Pred At RiskPred Needs Support   Pred On Track
+   Actual At Risk              12               9               0
+Actual Needs Support               2              37               1
+  Actual On Track               0               6              13
+
+----------------------------------------------------------------------
+Gradient Boosting
+----------------------------------------------------------------------
+  Regression:  R^2 = 0.7631   MAE = 5.53   RMSE = 7.53
+  Risk-band accuracy: 82.5%
+  At Risk        — precision 0.83  recall 0.71  f1 0.77  (support 21)
+  Needs Support  — precision 0.80  recall 0.88  f1 0.83  (support 40)
+  On Track       — precision 0.89  recall 0.84  f1 0.86  (support 19)
+  Confusion matrix (rows = actual, columns = predicted):
+                       Pred At RiskPred Needs Support   Pred On Track
+   Actual At Risk              15               6               0
+Actual Needs Support               3              35               2
+  Actual On Track               0               3              16
+
+======================================================================
+DEPLOYED MODEL: Ridge Regression
+======================================================================
+Selected for deployment because its parameters (an intercept plus one coefficient per feature) port exactly into the TypeScript server function that serves predictions in production, and because L2 regularisation keeps its coefficients stable despite correlated input features — which matters because those same coefficients are shown to lecturers as the explanation for each prediction. Random Forest and Gradient Boosting were evaluated (above) and are not categorically worse, but porting an ensemble of trees into the existing Python-free serving architecture would add substantial complexity for a final-year project without a clear accuracy justification here.
+
+Fitted equation:
+  predicted_score = -0.21
+    + (0.1501 * previous_semester_average)
+    + (-2.3203 * previous_failed_courses)
+    + (0.1290 * attendance_rate)
+    + (0.2383 * avg_test_score)
+    + (0.1117 * study_habits_score)
+    + (0.0212 * assignment_average)
+    + (0.1756 * assignment_completion_rate)
+    + (-0.0503 * assignment_late_rate)
+    + (0.5239 * performance_change)
+    + (1.9150 * engagement_score)
+    + (2.7689 * lms_activity_score)
+    + (-0.1535 * course_load)
+    + (-0.1210 * weeks_remaining)
+
+Held-out test performance:
+  R^2   = 0.8685
+  MAE   = 4.37 points
+  RMSE  = 5.61 points
+  Risk-band accuracy = 87.5%
+  At Risk recall = 0.71 (71% of genuinely at-risk students in the test set were correctly flagged)
+
+Limitations:
+  - Trained on a synthetic dataset (see generate_dataset.py), not real institutional records. Course load and weeks-remaining were generated independently of the outcome, so their near-zero coefficients reflect the synthetic data design, not a claim that these factors are unimportant in reality.
+  - At Risk is the smallest, hardest class to predict (fewest training examples); its recall is the single most important number in this report for an early-warning system and should be monitored closely if the model is retrained on real data.
