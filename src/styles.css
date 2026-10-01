@@ -4,12 +4,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Student Result Prediction System — design system.
- * Deep navy + white, teal accent, semantic risk tokens (red/amber/green).
- * All colors are oklch semantic tokens. Never hardcode colors in components.
- */
-
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -81,20 +75,17 @@
   --border: oklch(0.9 0.012 252);
   --input: oklch(0.9 0.012 252);
   --ring: oklch(0.62 0.095 195);
-
   --risk-high: oklch(0.55 0.2 27);
   --risk-high-soft: oklch(0.95 0.04 27);
   --risk-mid: oklch(0.68 0.15 72);
   --risk-mid-soft: oklch(0.96 0.05 82);
   --risk-low: oklch(0.55 0.13 155);
   --risk-low-soft: oklch(0.95 0.04 155);
-
   --chart-1: oklch(0.32 0.075 258);
   --chart-2: oklch(0.62 0.095 195);
   --chart-3: oklch(0.68 0.15 72);
   --chart-4: oklch(0.55 0.13 155);
   --chart-5: oklch(0.55 0.2 27);
-
   --sidebar: oklch(0.28 0.06 258);
   --sidebar-foreground: oklch(0.96 0.008 250);
   --sidebar-primary: oklch(0.62 0.095 195);
